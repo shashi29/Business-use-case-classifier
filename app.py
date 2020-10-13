@@ -5,28 +5,92 @@ import zipfile
 from flask import Flask, request, redirect, url_for, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from bertinfer import *
+import re
 
 app = Flask(__name__, static_url_path="/static")
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 #Load the model
 bt = bertInference()
 
+def findWholeWord(w):
+    return re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search
 
+proximityLevelDic = {
+    "Competitors in other markets":1,
+    "Prospects":1,
+    "Potential partners":1,
+    "State/Federal Regulations":2,
+    "Common Law":2,
+    "International Treaties":2,
+    "Channel Partners":3,
+    "Competitors":3,
+    "Investors":3
+}
+
+def info(proximityLevel, severityLevel):
+    if proximityLevel == 1:
+        if severityLevel == 'Severity level 1':
+            return "Risk_level_1"
+        if severityLevel == 'Severity level 2':
+            return "Risk_level_2"
+        if severityLevel == 'Severity level 3':
+            return "Risk_level_2"
+    if proximityLevel == 2:
+        if severityLevel == 'Severity level 1':
+            return "Risk_level_2"
+        if severityLevel == 'Severity level 2':
+            return "Risk_level_2"
+        if severityLevel == 'Severity level 3':
+            return "Risk_level_3"
+    if proximityLevel == 3:
+        if severityLevel == 'Severity level 1':
+            return "Risk_level_2"
+        if severityLevel == 'Severity level 2':
+            return "Risk_level_3"
+        if severityLevel == 'Severity level 3':
+            return "Risk_level_3"
+    if proximityLevel == 4:
+        if severityLevel == 'Severity level 1':
+            return "Risk_level_3"
+        if severityLevel == 'Severity level 2':
+            return "Risk_level_3"
+        if severityLevel == 'Severity level 3':
+            return "Risk_level_4"
+    if proximityLevel == 5:
+        if severityLevel == 'Severity level 1':
+            return "Risk_level_3"
+        if severityLevel == 'Severity level 2':
+            return "Risk_level_4"
+        if severityLevel == 'Severity level 3':
+            return "Risk_level_4"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    businessClass = ''
+    dangerLevel = ''
+    nextCompany = ''
+    with open("companyName.txt") as fp1: 
+        companyName = fp1.read() 
+
+    companyName = companyName.split("\n")
     if request.method == 'POST':
         try:
             companyName = request.form.get('companyName')  # access the data inside 
-            severityLevel = request.form.get('severityLevel')
+            proximityLevel = request.form.get('proximityLevel')
+            proximityLevel = proximityLevelDic[proximityLevel]
             summary = request.form.get('summary')
             businessClass = bt(summary)
 
+            dangerLevel = info(int(proximityLevel), businessClass)
+            for name in companyName:
+                if summary.find(name) is not -1:
+                    start = 0
+                    stop = len(name)
+                    print(summary.find(name, start, stop))
+                
         except Exception as ex:
             print(ex)
     
-    return render_template('index.html', message = businessClass)
+    return render_template('index.html', message = dangerLevel)
 
 
 if __name__ == '__main__':

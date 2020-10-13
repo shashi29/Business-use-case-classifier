@@ -8,11 +8,9 @@ import transformers
 from transformers import AutoModel, BertTokenizerFast
 
 #Class mapping
-info = {0:'Artificial_Intelligence', 
-        1:'Cyber_Security', 
-        2:'Pollution',
-        3:'Product_Shortage',
-        4:'Supply_chain_logistics'}
+info = {0:'Severity level 1', 
+        1:'Severity level 2', 
+        2:'Severity level 3'}
 
 class BERT_Arch(nn.Module):
     def __init__(self, bert):  
@@ -21,7 +19,7 @@ class BERT_Arch(nn.Module):
         self.dropout = nn.Dropout(0.1)
         self.relu =  nn.ReLU()
         self.fc1 = nn.Linear(768,512)
-        self.fc2 = nn.Linear(512,5)
+        self.fc2 = nn.Linear(512,3)
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, sent_id, mask):
@@ -34,7 +32,7 @@ class BERT_Arch(nn.Module):
         return x
 
 class bertInference:
-    def __init__(self, model_file_path='saved_weights.bin', max_seq_len=100):
+    def __init__(self, model_file_path='saved_weights_3Class.bin', max_seq_len=100):
         self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         bert = AutoModel.from_pretrained('bert-base-uncased')
