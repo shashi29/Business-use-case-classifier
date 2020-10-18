@@ -5,12 +5,17 @@ import zipfile
 from flask import Flask, request, redirect, url_for, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from bertinfer import *
+from transformers import pipeline
 import re
+from gensim.utils import deaccent
+from collections import Counter
+from utility import *
 
 app = Flask(__name__, static_url_path="/static")
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 #Load the model
 bt = bertInference()
+summarizer = pipeline("summarization")
 
 def findWholeWord(w):
     return re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search
@@ -77,21 +82,34 @@ def index():
             companyName = request.form.get('companyName')  # access the data inside 
             proximityLevel = request.form.get('proximityLevel')
             proximityLevel = proximityLevelDic[proximityLevel]
-            summary = request.form.get('summary')
+            article = request.form.get('article')
+            summarizerText = summarizer(article, do_sample=False)[0]
+            summary = summarizerText['summary_text']
             businessClass = bt(summary)
-
+            
+            article = article.split()
+            article = clean_text(article)
+            #article = " ".join(article)
             dangerLevel = info(int(proximityLevel), businessClass)
-            for name in companyName:
-                if summary.find(name) is not -1:
-                    start = 0
-                    stop = len(name)
-                    print(summary.find(name, start, stop))
-                
+            #for name in companyName:
+            #    if article.find(name) is not -1:
+            #        start = 0
+            #        stop = len(name)
+            #        print(summary.find(name, start, stop))
+            for word in article:
+                if word == companyName:
+                    print("Company Name present in the article",companyName)
+            
         except Exception as ex:
             print(ex)
     
     return render_template('index.html', message = dangerLevel)
 
+def clean_text(word):
+    word = clean_contractions(word)
+    word = to_lower(word)
+    
+    return word
 
 if __name__ == '__main__':
 
