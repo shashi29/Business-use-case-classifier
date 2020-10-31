@@ -85,8 +85,8 @@ def index():
     if request.method == 'POST':
         try:
             companyName = request.form.get('companyName')  # access the data inside 
-            proximityLevel = request.form.get('proximityLevel')
-            proximityLevel = proximityLevelDic[proximityLevel]
+            proximityLevelName = request.form.get('proximityLevel')
+            proximityLevel = proximityLevelDic[proximityLevelName]
             articleLink = request.form.get('articleLink')
             article = extract_article(articleLink)
             summarizerText = summarizer(article, do_sample=False)[0]
@@ -96,6 +96,7 @@ def index():
             article = article.split()
             article = clean_text(article)
             dangerLevel = info(int(proximityLevel), businessClass)
+            dangerLevel = dangerLevel + ' ' + proximityLevelName
             for word in article:
                 if word == companyName:
                     print("Company Name present in the article",companyName)
@@ -105,7 +106,7 @@ def index():
     
     return render_template('index.html', message = dangerLevel)
 
-def extract_article(link):
+def extract_article(url):
     article = Article(url)
     article.download()
     article.html
