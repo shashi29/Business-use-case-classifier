@@ -2,13 +2,18 @@ import os
 import requests
 import zlib
 import zipfile
+import nltk
+import re
+
+from newspaper import Article
+from newspaper import Config
 from flask import Flask, request, redirect, url_for, render_template, send_from_directory
 from werkzeug.utils import secure_filename
-from bertinfer import *
 from transformers import pipeline
-import re
 from gensim.utils import deaccent
 from collections import Counter
+
+from bertinfer import *
 from utility import *
 
 app = Flask(__name__, static_url_path="/static")
@@ -82,20 +87,15 @@ def index():
             companyName = request.form.get('companyName')  # access the data inside 
             proximityLevel = request.form.get('proximityLevel')
             proximityLevel = proximityLevelDic[proximityLevel]
-            article = request.form.get('article')
+            articleLink = request.form.get('articleLink')
+            article = extract_article(articleLink)
             summarizerText = summarizer(article, do_sample=False)[0]
             summary = summarizerText['summary_text']
             businessClass = bt(summary)
             
             article = article.split()
             article = clean_text(article)
-            #article = " ".join(article)
             dangerLevel = info(int(proximityLevel), businessClass)
-            #for name in companyName:
-            #    if article.find(name) is not -1:
-            #        start = 0
-            #        stop = len(name)
-            #        print(summary.find(name, start, stop))
             for word in article:
                 if word == companyName:
                     print("Company Name present in the article",companyName)
@@ -105,10 +105,16 @@ def index():
     
     return render_template('index.html', message = dangerLevel)
 
+def extract_article(link):
+    article = Article(url)
+    article.download()
+    article.html
+    article.parse()
+    return article.text
+
 def clean_text(word):
     word = clean_contractions(word)
     word = to_lower(word)
-    
     return word
 
 if __name__ == '__main__':
