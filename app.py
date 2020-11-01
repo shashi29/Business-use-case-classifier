@@ -88,7 +88,11 @@ def index():
             proximityLevelName = request.form.get('proximityLevel')
             proximityLevel = proximityLevelDic[proximityLevelName]
             articleLink = request.form.get('articleLink')
-            article = extract_article(articleLink)
+            if articleLink[:4] == 'http':
+                article = extract_article(articleLink)
+            else:
+                article = articleLink
+
             summarizerText = summarizer(article, do_sample=False)[0]
             summary = summarizerText['summary_text']
             businessClass = bt(summary)
@@ -96,7 +100,7 @@ def index():
             article = article.split()
             article = clean_text(article)
             dangerLevel = info(int(proximityLevel), businessClass)
-            dangerLevel = dangerLevel + ' ' + proximityLevelName
+            dangerLevel = dangerLevel + ' ' + businessClass
             for word in article:
                 if word == companyName:
                     print("Company Name present in the article",companyName)
