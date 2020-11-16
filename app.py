@@ -45,6 +45,11 @@ def info(proximityLevel, severityLevel):
             return "Risk_level_2"
         if severityLevel == 'Severity level 3':
             return "Risk_level_2"
+        if severityLevel == 'Severity level 4':
+            return "Risk_level_3"
+        if severityLevel == 'Severity level 5':
+            return "Risk_level_3"
+        
     if proximityLevel == 2:
         if severityLevel == 'Severity level 1':
             return "Risk_level_2"
@@ -52,6 +57,11 @@ def info(proximityLevel, severityLevel):
             return "Risk_level_2"
         if severityLevel == 'Severity level 3':
             return "Risk_level_3"
+        if severityLevel == 'Severity level 4':
+            return "Risk_level_3"
+        if severityLevel == 'Severity level 5':
+            return "Risk_level_4"
+
     if proximityLevel == 3:
         if severityLevel == 'Severity level 1':
             return "Risk_level_2"
@@ -59,6 +69,11 @@ def info(proximityLevel, severityLevel):
             return "Risk_level_3"
         if severityLevel == 'Severity level 3':
             return "Risk_level_3"
+        if severityLevel == 'Severity level 2':
+            return "Risk_level_4"
+        if severityLevel == 'Severity level 3':
+            return "Risk_level_4"
+
     if proximityLevel == 4:
         if severityLevel == 'Severity level 1':
             return "Risk_level_3"
@@ -66,6 +81,10 @@ def info(proximityLevel, severityLevel):
             return "Risk_level_3"
         if severityLevel == 'Severity level 3':
             return "Risk_level_4"
+        if severityLevel == 'Severity level 4':
+            return "Risk_level_4"
+        if severityLevel == 'Severity level 5':
+            return "Risk_level_5"
     if proximityLevel == 5:
         if severityLevel == 'Severity level 1':
             return "Risk_level_3"
@@ -73,6 +92,10 @@ def info(proximityLevel, severityLevel):
             return "Risk_level_4"
         if severityLevel == 'Severity level 3':
             return "Risk_level_4"
+        if severityLevel == 'Severity level 4':
+            return "Risk_level_5"
+        if severityLevel == 'Severity level 5':
+            return "Risk_level_5"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
