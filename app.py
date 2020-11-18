@@ -34,7 +34,13 @@ proximityLevelDic = {
     "International Treaties":2,
     "Channel Partners":3,
     "Competitors":3,
-    "Investors":3
+    "Investors":3,
+    "Customers":4,
+    "Suppliers":4,
+    "all employees excuding executives and board employees":4,
+    "Client Company":5,
+    "Companies own and operated under the same group":5,
+    "Owner/Board Members(NED/EXD)/C-suite employees":5
 }
 
 def info(proximityLevel, severityLevel):
