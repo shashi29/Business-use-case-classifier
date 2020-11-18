@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Watermark Remover</title>
+    <title>Conditional Alerting</title>
 </head>
 <body>
 <div align="center">
     <form action="" method="post">
+    	<h1 style="font-size:2vw">Conditional Alerting</h1>
         <p>
-            <label for="companyName">companyName</label>
+            <label for="companyName">Company Name:</label>
             <input type="text" name="companyName">
         </p>
         <p>
-            <label for="proximityLevel">proximityLevel</label>
+            <label for="proximityLevel">Proximity Level:</label>
             <input type="text" name="proximityLevel">
         </p>
         <div>
-            <label for="article">summary</label>
-            <textarea id="article" name="article"></textarea>
+            <label size="160" for="articleLink">Link / Text: </label>
+            <textarea id="articleLink" name="articleLink" style="font-size:10pt;height:120px;width:200px;" ></textarea>
         </div>
         <p>
             <input type="submit">
@@ -27,7 +28,7 @@
     {% if message %}
        <p>{{ message }}</p>
     {% endif %}
-    
+    <h1 style="font-size:1vw">By Orion Business Innovations.</h1>
 </div>
 </body>
 </html>
