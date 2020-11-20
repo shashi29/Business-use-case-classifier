@@ -129,7 +129,7 @@ def index():
             article = article.split()
             article = clean_text(article)
             dangerLevel = info(int(proximityLevel), businessClass)
-            dangerLevel = "Risk Level:" + ' ' + dangerLevel + ' \t' + "Severity Level:" + ' ' + businessClass + '\t' + "Proximity Level:" + ' ' + proximityLevelName
+            dangerLevel = "Risk Level:" + '' + dangerLevel + ' ' + "        Severity Level:" + ' ' + businessClass + '' + "         Proximity Level:" + ' ' + str(proximityLevel)
             for word in article:
                 if word == companyName:
                     print("Company Name present in the article",companyName)
