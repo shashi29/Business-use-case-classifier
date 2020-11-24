@@ -113,13 +113,14 @@ def info(proximityLevel, severityLevel):
 def index():
     dangerLevel = ''
     nextCompany = ''
+    messageList = list()
     with open("companyName.txt") as fp1: 
         companyName = fp1.read() 
 
     companyName = companyName.split("\n")
     if request.method == 'POST':
         try:
-            messageList = list()
+
             companyName = request.form.get('companyName')  # access the data inside 
             proximityLevelName = request.form.get('proximityLevel')
             proximityLevel = proximityLevelDic[proximityLevelName]
