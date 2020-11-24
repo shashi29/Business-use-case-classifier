@@ -43,6 +43,12 @@ proximityLevelDic = {
     "Owner/Board Members(NED/EXD)/C-suite employees":5
 }
 
+severity_map_id = {'Severity level 1':1, 
+        'Severity level 2':2, 
+        'Severity level 3':3,
+        'Severity level 4':4,
+        'Severity level 5':5}
+
 def info(proximityLevel, severityLevel):
     if proximityLevel == 1:
         if severityLevel == 'Severity level 1':
@@ -113,6 +119,7 @@ def index():
     companyName = companyName.split("\n")
     if request.method == 'POST':
         try:
+            messageList = list()
             companyName = request.form.get('companyName')  # access the data inside 
             proximityLevelName = request.form.get('proximityLevel')
             proximityLevel = proximityLevelDic[proximityLevelName]
@@ -129,7 +136,10 @@ def index():
             article = article.split()
             article = clean_text(article)
             dangerLevel = info(int(proximityLevel), businessClass)
-            dangerLevel = "Risk Level:" + '' + dangerLevel + ' ' + "        Severity Level:" + ' ' + businessClass + '' + "         Proximity Level:" + ' ' + str(proximityLevel)
+            #dangerLevel = "Risk Level:" + '' + dangerLevel + ' ' + "        Severity Level:" + ' ' + businessClass + '' + "         Proximity Level:" + ' ' + str(proximityLevel)
+            messageList.append(dangerLevel[11])
+            messageList.append(severity_map_id[businessClass])
+            messageList.append(proximityLevel)
             for word in article:
                 if word == companyName:
                     print("Company Name present in the article",companyName)
@@ -137,7 +147,7 @@ def index():
         except Exception as ex:
             print(ex)
     
-    return render_template('index.html', message = dangerLevel)
+    return render_template('index.html', message = messageList)
 
 def extract_article(url):
     article = Article(url)
