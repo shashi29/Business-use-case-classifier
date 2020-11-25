@@ -81,9 +81,9 @@ def info(proximityLevel, severityLevel):
             return "Risk_level_3"
         if severityLevel == 'Severity level 3':
             return "Risk_level_3"
-        if severityLevel == 'Severity level 2':
+        if severityLevel == 'Severity level 4':
             return "Risk_level_4"
-        if severityLevel == 'Severity level 3':
+        if severityLevel == 'Severity level 5':
             return "Risk_level_4"
 
     if proximityLevel == 4:
@@ -130,7 +130,11 @@ def index():
             else:
                 article = articleLink
 
-            summarizerText = summarizer(article, do_sample=False)[0]
+            #Remove special symbol 
+            #article = re.sub('[^A-Za-z0-9]+', '', article)
+
+
+            summarizerText = summarizer(article, do_sample=True)[0]
             summary = summarizerText['summary_text']
             businessClass = bt(summary)
             
@@ -141,6 +145,7 @@ def index():
             messageList.append(dangerLevel[11])
             messageList.append(severity_map_id[businessClass])
             messageList.append(proximityLevel)
+            print("[INFO] ",messageList)
             for word in article:
                 if word == companyName:
                     print("Company Name present in the article",companyName)
